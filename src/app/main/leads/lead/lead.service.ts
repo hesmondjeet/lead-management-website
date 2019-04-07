@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class LeadService implements Resolve<any> {
 
   routeParams: any;
-  lead: any = { name: "", email: "", phone: "", status: 1 };
+  lead: any;
   agentId: number = 1;
 
   constructor(private http: HttpClient) { }
@@ -30,21 +31,26 @@ export class LeadService implements Resolve<any> {
   getLead(leadId: string) {
     return new Promise((resolve, reject) => {
       if(leadId !== "new") {
-        this.lead = {id: 1, name: "Lead One", email: "leadone@email.com", phone: "+60111111111", status: 1};
+        this.http.get(environment.server + `/leads/${leadId}`)
+        .toPromise()
+        .then(response => {
+          this.lead = response;
+          resolve(this.lead);
+        });
+      } else {
+        this.lead = { name: "", email: "", phone: "", status: 1 };
+        resolve(this.lead);
       }
-      resolve(this.lead);
     });
   }
 
   saveLead(lead: any) {
     if(this.routeParams.leadId === 'new') {
-      // call POST function
       console.log("Calling POST: ", lead);
+      return this.http.post(environment.server + `/leads`, lead).toPromise();
     } else {
-      //call PUT function
       console.log("Calling PUT: ", lead);
+      return this.http.put(environment.server + `/leads/${this.routeParams.leadId}`, lead).toPromise();
     }
-
-    return lead;
   }
 }

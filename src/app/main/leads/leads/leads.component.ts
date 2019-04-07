@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { statusModel } from '../../../models/status.model';
 import { LeadsService } from './leads.service';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { ConfirmDeleteDialog } from './confirm-delete/confirm-delete.component';
 
 @Component({
@@ -11,8 +11,8 @@ import { ConfirmDeleteDialog } from './confirm-delete/confirm-delete.component';
 })
 export class LeadsComponent implements OnInit {
 
-  status = statusModel;
-  leads: any[] = [];
+  status: any[] = statusModel;
+  leads: any;
   displayedColumns: string[] = ['name', 'email', 'phone', 'status', 'action'];
 
   constructor(private ls: LeadsService, 
@@ -20,7 +20,7 @@ export class LeadsComponent implements OnInit {
     private snackbar: MatSnackBar) { }
 
   ngOnInit() {
-    this.leads = this.ls.leads;
+    this.leads = new MatTableDataSource(this.ls.leads);
   }
 
   /**
@@ -32,8 +32,16 @@ export class LeadsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-        this.ls.deleteLead(leadId);
-        this.snackbar.open("Lead has been deleted.", "OK", {duration: 2000});
+        this.ls.deleteLead(leadId)
+        .then((response) => {
+          this.ls.leads.forEach((lead, index) => {
+            if(lead.id === leadId) {
+              this.ls.leads.splice(index, 1);
+              this.leads = new MatTableDataSource(this.ls.leads);
+            }
+          });
+          this.snackbar.open("Lead has been deleted.", "OK", {duration: 2000});
+        });
       }
     });
   }
