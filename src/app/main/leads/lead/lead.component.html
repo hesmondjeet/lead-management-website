@@ -1,0 +1,47 @@
+<div class="lead-page">
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center" class="header">
+    <div fxLayout="row" fxLayoutAlign="start center" class="full-width">
+      <button mat-icon-button [routerLink]="['/leads']"><mat-icon>arrow_back</mat-icon></button>
+      <h3>Lead Details</h3>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" class="full-width">
+      <button mat-raised-button 
+        class="save-btn" 
+        color="primary" 
+        [disabled]="form.pristine || form.invalid"
+        (click)="save()">SAVE</button>
+      <button mat-raised-button (click)="reset()" [disabled]="form.pristine">CANCEL</button>
+    </div>
+  </div>
+  <form class="full-width" fxLayout="column" [formGroup]="form">
+    <mat-form-field appearance="outline" floatLabel="always" fxFlex="100">
+      <mat-label>Lead Name</mat-label>
+      <input matInput placeholder="John Doe" formControlName="name">
+      <mat-error *ngIf="form.get('name').errors">
+        Name is required
+      </mat-error>
+    </mat-form-field>
+  
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
+      <mat-form-field appearance="outline" floatLabel="always" class="full-width" fxFlex="45" fxFlex.xs="100" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="john@email.com" formControlName="email">
+      </mat-form-field>
+      <mat-form-field appearance="outline" floatLabel="always" class="full-width" fxFlex="45" fxFlex.xs="100" class="full-width">
+        <mat-label>Phone</mat-label>
+        <input matInput placeholder="+60126789" formControlName="phone">
+      </mat-form-field>
+    </div>
+  
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start center">
+      <mat-form-field appearance="outline" floatLabel="always" fxFlex="45" fxFlex.xs="100"  class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let status of statuses" [value]="status.id">
+            {{status.val | titlecase}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</div>

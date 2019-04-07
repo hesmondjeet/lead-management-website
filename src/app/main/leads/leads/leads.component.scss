@@ -1,0 +1,20 @@
+.leads-page {
+  padding: 24px;
+  height: 100%;
+  min-height: 100vh;
+  position: relative;
+
+  h3 {
+    margin: 12px 0 24px 0;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .add-btn {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+  }
+}
