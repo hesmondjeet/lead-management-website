@@ -11,13 +11,17 @@ import { ConfirmDeleteDialog } from './confirm-delete/confirm-delete.component';
 })
 export class LeadsComponent implements OnInit {
 
-  status: any[] = statusModel;
+  statuses: any = {};
   leads: any;
   displayedColumns: string[] = ['name', 'email', 'phone', 'status', 'action'];
 
   constructor(private ls: LeadsService, 
     private dialog: MatDialog,
-    private snackbar: MatSnackBar) { }
+    private snackbar: MatSnackBar) {
+      statusModel.forEach(status => {
+        this.statuses[status.id] = status.val;
+      });
+    }
 
   ngOnInit() {
     this.leads = new MatTableDataSource(this.ls.leads);
